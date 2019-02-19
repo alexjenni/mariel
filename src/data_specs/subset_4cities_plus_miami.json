@@ -1,0 +1,3 @@
+{
+    "KEEP_CONDITION": "control_group == 1 | miami ==1"
+}
