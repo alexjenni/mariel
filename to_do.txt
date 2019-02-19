@@ -1,0 +1,19 @@
+To Do List
+
+Cleaning R file
+- generate log weekly
+- verify sample restrictions (age)
+
+Sample restriction
+- generate control group indicator (Atlanta, Los Angeles, Houston, Tampa-St.Petersburg)
+- education groups
+
+Make figures
+- Figure 2, 3.a, 6.a
+
+Make table
+- Table 5.a column 1 and 4
+
+
+- Snakemake
+- R-markdown / latex
