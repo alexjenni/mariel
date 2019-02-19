@@ -1,8 +1,8 @@
 #' rename_variables.R
 #'
-#' contributors: @lachlandeer, @julianlanger, @alexjenni
+#' contributors: @lachlandeer, @julianlanger, @alexjenni, @mventu
 #'
-#' Adds meaningful variable names to the original CPS data set
+#' Adds meaningful variable names to the original data set
 #'
 
 # Libraries
@@ -11,32 +11,32 @@ library(haven)
 library(readr)
 library(dplyr)
 
- # CLI parsing
-# option_list = list(
-#     make_option(c("-d", "--data"),
-#                 type = "character",
-#                 default = NULL,
-#                 help = "csv dataset file name",
-#                 metavar = "character"),
-# 	make_option(c("-o", "--out"),
-#                 type = "character",
-#                 default = "out.csv",
-#                 help = "output file name [default = %default]",
-#                 metavar = "character")
-# );
-# 
-# opt_parser = OptionParser(option_list = option_list);
-# opt = parse_args(opt_parser);
-# 
-# if (is.null(opt$data)){
-#   print_help(opt_parser)
-#   stop("At least one argument must be supplied (input file).n", call. = FALSE)
-# }
+# CLI parsing
+option_list = list(
+  make_option(c("-d", "--data"),
+              type = "character",
+              default = NULL,
+              help = "csv file name",
+              metavar = "character"),
+  make_option(c("-o", "--out"),
+              type = "character",
+              default = "out.csv",
+              help = "output file name [default = %default]",
+              metavar = "character")
+);
+
+opt_parser = OptionParser(option_list = option_list);
+opt = parse_args(opt_parser);
+
+if (is.null(opt$data)){
+  print_help(opt_parser)
+  stop("At least one argument must be supplied (input file).n", call. = FALSE)
+}
 
 # Load data
 print("Loading data")
-# cps_data <- read_csv(opt$data)
-cps_data <- read_csv("src/data/cps_77-93_men.csv")
+cps_data <- read_csv(opt$data)
+#cps_data <- read_csv("../data/cps_77-93_men.csv")
 
 # Rename variables
 print("Rename and generate variables")
@@ -59,6 +59,7 @@ cps_data <- cps_data %>%
 # Generate variables
 cps_data <- cps_data %>%
   mutate(miami= msa_code==5000) %>% 
+  mutate(control_group= (msa_code==520 | msa_code==4480 | msa_code==3360 | msa_code==8280)) %>% 
   mutate(hispanic = hispan < 900 & hispan > 0) %>% 
   mutate(year = year -1) %>%  # corresponds to the previous year income
   mutate(educ_group=educ)
@@ -73,10 +74,25 @@ cps_data$educ_group <- ordered(cps_data$educ_group,
 cps_data <- cps_data %>%
   select(-educ)
 
+cps_data <- cps_data %>%
+  mutate(weekly_wage = wage_inc/weeks_worked) %>% 
+  mutate(log_weekly_wage = log(wage_inc/weeks_worked))
+
 # Account for missings
 cps_data$hispanic[cps_data$hispan>900] <- NA
+
+cps_data$weekly_wage[is.nan(cps_data$weekly_wage)] <- NA
+cps_data$log_weekly_wage[is.nan(cps_data$log_weekly_wage)] <- NA
+cps_data <- cps_data %>%
+  mutate(log_weekly_wage = na_if(log_weekly_wage, -Inf)) %>%
+  mutate(log_weekly_wage = na_if(log_weekly_wage, Inf))
+cps_data <- cps_data %>%
+  mutate(weekly_wage = na_if(log_weekly_wage, -Inf)) %>%
+  mutate(weekly_wage = na_if(log_weekly_wage, Inf))
+
 
 
 # Save data
 print("saving output")
-write_csv(cps_data, "out/data/cps_borjas_renamed.csv")
+#write_csv(cps_data, "../../out/data/cps_borjas_renamed.csv")
+write_csv(cps_data, opt$out)
