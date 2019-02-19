@@ -1,0 +1,6 @@
+doc/*
+out/*
+.Rproj.user/*
+mariel.Rproj
+src/data/*
+*.pdf
