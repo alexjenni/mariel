@@ -29,7 +29,7 @@ rule all:
 rule compute_wage_trend:
     input:
         script = config["src_analysis"] + "compute_wage_trend.R",
-        data = config["out_data"] + "cps_borjas_renamed.csv",
+        data = config["out_data"] + "cps_77-93_men_clean.csv",
         subset = config["src_data_specs"] + "subset_{iEduc}.json"
     output:
         out = config["out_data"] + "cps_trend_{iEduc}.csv"
@@ -44,12 +44,12 @@ rule compute_wage_trend:
 
 rule rename_vars:
     input:
-        script = config["src_data_mgt"] + "rename_variables.R",
+        script = config["src_data_mgt"] + "clean_cps.R",
         data   = config["src_data"] + "cps_77-93_men.csv"
     output:
-        out = config["out_data"] + "cps_borjas_renamed.csv"
+        out = config["out_data"] + "cps_77-93_men_clean.csv"
     log:
-        config["log"] + "rename_vars.Rout"
+        config["log"] + "clean_cps.Rout"
     shell:
         "Rscript {input.script} \
             --data {input.data} \
