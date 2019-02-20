@@ -3,7 +3,7 @@ src/data/*
 out/*
 logs/*
 .snakemake/*
-*.Rproj
+*.Rproj*
 *.pdf
+*.Rout
 .Rhistory
-.Rproj.user
