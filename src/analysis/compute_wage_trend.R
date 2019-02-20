@@ -54,7 +54,10 @@ print("Collapse log wage")
 cps_data_subsample <- cps_data %>%
     group_by(year, miami) %>%
     filter(eval(parse(text = data_filter$KEEP_CONDITION))) %>%
-    summarise(log_weekly_wage=mean(log_weekly_wage))
+    mutate(tot_log_weekly_wage = weights * log_weekly_wage) %>%     # use survey weights
+    summarise(log_weekly_wage=mean(log_weekly_wage),
+              log_weekly_wage_wgt=mean(tot_log_weekly_wage)/mean(weights),
+              n = n())
 
 # Save data
 print("saving output")

@@ -13,28 +13,28 @@ configfile: "config.yaml"
 
 # EDUC_SUBSET = glob_wildcards(config["src_data_specs"] + "{iFile}.json").iFile
 # EDUC_SUBSET = list(filter(lambda x: x.startswith("subset_educ"), EDUC_SUBSET))
-EDUC_SUBSET = ["no_high_school",
-               "high_school_and_more"]
-NON_HISP = config["src_data_specs"] + "subset_non_hispanic.json"
 
+SUBSET =  glob_wildcards(config["src_data_specs"] +
+            "subset_{iFile}.json").iFile
+print(SUBSET)
 
 # --- Build Rules --- #
 
 rule all:
     input:
         data = expand(config["out_data"] +
-                    "cps_trend_{iEduc}.csv",
-                    iEduc= EDUC_SUBSET)
+                    "cps_trend_{iSubset}.csv",
+                    iSubset= SUBSET)
 
 rule compute_wage_trend:
     input:
-        script = config["src_analysis"] + "compute_wage_trend.R",
-        data = config["out_data"] + "cps_77-93_men_clean.csv",
-        subset = config["src_data_specs"] + "subset_{iEduc}.json"
+        script      = config["src_analysis"] + "compute_wage_trend.R",
+        data        = config["out_data"] + "cps_77-93_men_clean.csv",
+        subset      = config["src_data_specs"] + "subset_{iSubset}.json"
     output:
-        out = config["out_data"] + "cps_trend_{iEduc}.csv"
+        out = config["out_data"] + "cps_trend_{iSubset}.csv"
     log:
-        config["log"] + "compute_wage_trend_{iEduc}.Rout"
+        config["log"] + "compute_wage_trend_{iSubset}.Rout"
     shell:
         "Rscript {input.script} \
             --data {input.data} \
