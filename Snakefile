@@ -40,7 +40,7 @@ rule all:
 #         "Rscript {input.script} \
 #             --data {input.data} \
 #             --out {output.estimates} > {log} {LOGALL}"
-
+#
 rule make_did_data:
     input:
         script = config["src_analysis"] + "make_did_data.R",
@@ -53,24 +53,25 @@ rule make_did_data:
         "Rscript {input.script} \
             --data {input.data} \
             --out {output.out} > {log} {LOGALL}"
-<<<<<<< HEAD
-0.
-=======
 
 rule graphs:
     input:
-        script  = config["src_figures"] + "plot_trend.R",
-        data    = config["out_data"] + "cps_trend_no_high_school_not_miami.csv"
+        script      = config["src_figures"] + "plot_trend.R",
+        data_miami        = config["out_data"] + "cps_trend_no_high_school_miami.csv",
+        data_not_miami        = config["out_data"] + "cps_trend_no_high_school_not_miami.csv",
+        data_placebo        = config["out_data"] + "cps_trend_no_high_school_placebo_not_miami.csv"
     output:
-        fig     = config["out_figures"] + "cps_trend_no_hs_vs_not_miami.pdf"
+        out = config["out_figures"] + "cps_trend_no_hs_vs_not_miami.pdf",
+        out_placebo = config["out_figures"] + "cps_trend_no_hs_vs_placebo_not_miami.pdf"
     log:
-        config["log"] + "plot_trend_no_hs_vs_not_miami.Rout"
+        config["log"] + "plot_trend.Rout"
     shell:
         "Rscript {input.script} \
-            --data {input.data} \
-            --out {output.fig} > {log} {LOGALL}"
-
->>>>>>> 7b7581523d89a64a9b06d0b10197dae408d59e05
+            --data_miami {input.data_miami} \
+            --data_not_miami {input.data_not_miami} \
+            --data_placebo {input.data_placebo} \
+            --out_placebo {output.out_placebo} \
+            --out {output.out} > {log} {LOGALL}"
 
 rule compute_wage_trend:
     input:
@@ -86,7 +87,6 @@ rule compute_wage_trend:
             --data {input.data} \
             --subset {input.subset} \
             --out {output.out} > {log} {LOGALL}"
-
 
 rule rename_vars:
     input:
