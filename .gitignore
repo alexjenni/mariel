@@ -1,7 +1,8 @@
 doc/*
-out/*
-.Rproj.user/*
-mariel.Rproj
 src/data/*
+out/*
+logs/*
+.snakemake/*
+.Rproj*
 *.pdf
 .Rhistory
