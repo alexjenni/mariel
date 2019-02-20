@@ -23,6 +23,7 @@ print(SUBSET)
 
 rule all:
     input:
+        graph = config["out_analysis"] + "cps_trend_no_high_school.pdf",
         data_fig = expand(config["out_data"] +
                     "cps_trend_{iSubset}.csv",
                     iSubset= SUBSET),
@@ -53,6 +54,20 @@ rule make_did_data:
         "Rscript {input.script} \
             --data {input.data} \
             --out {output.out} > {log} {LOGALL}"
+
+rule graphs:
+    input:
+        script            = config["src_analysis"] + "plot_trend.R",
+        data              = config["out_data"] + "cps_trend_no_high_school_not_miami.csv"
+    output:
+        out               = config["out_analysis"] + "cps_trend_no_high_school.pdf"
+    log:
+        config["log"] + "plot_trend.Rout"
+    shell:
+        "Rscript {input.script} \
+            --data {input.data} \
+            --out {output.out} > {log} {LOGALL}"
+
 
 rule compute_wage_trend:
     input:
