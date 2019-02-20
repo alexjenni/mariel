@@ -40,7 +40,7 @@ rule graphs:
         "Rscript {input.script} \
             --data {input.data} \
             --out {output.out} > {log} {LOGALL}"
-
+0.
 
 rule compute_wage_trend:
     input:
