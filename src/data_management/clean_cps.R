@@ -91,22 +91,29 @@ cps_data <- cps_data %>%
     mutate(weekly_wage = na_if(weekly_wage, Inf)) %>%
     mutate(log_weekly_wage = log(weekly_wage))
 
+
 # year adjustement
 cps_data <- cps_data %>%
-  mutate(year = year -1)  # corresponds to the previous year income
+    mutate(year = year -1)  # corresponds to the previous year income
 
 # Restrictions
 cps_data <- cps_data %>%
     filter(weekly_wage > 0) %>%                             # keep men with positive hourly wages
-    filter(age >=25 & age < 0) %>%
+    filter(age >=25 & age < 60) %>%
     filter(hispanic==0) %>%                                 # keep non-hispanic men
     filter(emp_type!=10 & emp_type!=13 & emp_type!=14) %>%  # drop self-employed
     filter(labforce==2)  %>%                                # drop men outside of the labor force
-    filter(empstat !=1)                                     # drop members of army force
+    filter(empstat !=1)  %>%                                 # drop members of army force
+    filter(weights > 0)
+    
+# Trim 1% top and 1% bottom earners
+cps_data <- cps_data %>%
+    filter(weekly_wage > quantile(cps_data$weekly_wage, 0.01) &
+          weekly_wage < quantile(cps_data$weekly_wage, 0.99))
 
 # Drop variables
 cps_data <- cps_data %>%
-      select(-educ, -hispan, -hispanic, -emp_type, -empstat, -labforce)
+    select(-educ, -hispan, -hispanic, -emp_type, -empstat, -labforce)
 
 # Save data
 print("saving output")
