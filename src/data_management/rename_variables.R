@@ -36,12 +36,11 @@ if (is.null(opt$data)){
 # Load data
 print("Loading data")
 cps_data <- read_csv(opt$data)
-#cps_data <- read_csv("../data/cps_77-93_men.csv")
 
 # Rename variables
 print("Rename and generate variables")
 cps_data <- cps_data %>%
-    setNames(tolower(names(cps_data))) %>% 
+    setNames(tolower(names(cps_data))) %>%
     select(year,
            cpi99,
            age,
@@ -57,42 +56,51 @@ cps_data <- cps_data %>%
 
 
 # Generate variables
+# Area Dummies
 cps_data <- cps_data %>%
-  mutate(miami= msa_code==5000) %>% 
-  mutate(control_group= (msa_code==520 | msa_code==4480 | msa_code==3360 | msa_code==8280)) %>% 
-  mutate(hispanic = hispan < 900 & hispan > 0) %>% 
-  mutate(year = year -1) %>%  # corresponds to the previous year income
-  mutate(educ_group=educ)
+    mutate(miami= msa_code==5000) %>% # Miami
+    mutate(control_group= (msa_code==520 | # Atlanta
+                             msa_code==4480 | # Los Angeles
+                             msa_code==3360 | # Houston
+                             msa_code==8280)) # Tampa
+
+# Education
+cps_data <- cps_data %>%
+    mutate(educ_group=educ)
 
 cps_data$educ_group[cps_data$educ<61] <- 1
 cps_data$educ_group[cps_data$educ>=70 & cps_data$educ<75] <- 2
 cps_data$educ_group[cps_data$educ>=80 & cps_data$educ<101] <- 3
 cps_data$educ_group[cps_data$educ>=110] <- 4
 cps_data$educ_group <- ordered(cps_data$educ_group,
-  levels = c(1,2,3,4),
-  labels = c("<12 years", "12 years", "13-15 years", ">15 years"))
-cps_data <- cps_data %>%
-  select(-educ)
+    levels = c(1,2,3,4),
+    labels = c("<12 years", "12 years", "13-15 years", ">15 years"))
 
-cps_data <- cps_data %>%
-  mutate(weekly_wage = wage_inc/weeks_worked) %>% 
-  mutate(log_weekly_wage = log(wage_inc/weeks_worked))
 
-# Account for missings
+# Hispanic ethnicity
+cps_data <- cps_data %>%
+    mutate(hispanic = hispan < 900 & hispan > 0)
 cps_data$hispanic[cps_data$hispan>900] <- NA
 
-cps_data$weekly_wage[is.nan(cps_data$weekly_wage)] <- NA
-cps_data$log_weekly_wage[is.nan(cps_data$log_weekly_wage)] <- NA
 cps_data <- cps_data %>%
-  mutate(log_weekly_wage = na_if(log_weekly_wage, -Inf)) %>%
-  mutate(log_weekly_wage = na_if(log_weekly_wage, Inf))
+  select(-educ, -hispan)
+
+# Wage variables
 cps_data <- cps_data %>%
-  mutate(weekly_wage = na_if(log_weekly_wage, -Inf)) %>%
-  mutate(weekly_wage = na_if(log_weekly_wage, Inf))
+    mutate(weekly_wage = wage_inc*cpi99/weeks_worked) %>% # adjust for inflation (1999 prices)
+    mutate(weekly_wage = na_if(weekly_wage, NaN)) %>% 
+    mutate(weekly_wage = na_if(weekly_wage, Inf)) %>% 
+    mutate(log_weekly_wage = log(weekly_wage))
 
+# year adjustement
+cps_data <- cps_data %>%
+  mutate(year = year -1)  # corresponds to the previous year income
 
+# Restrictions
+cps_data <- cps_data %>%
+    filter(weekly_wage > 0) %>% # keep men with positive hourly wages only
+    filter(age >=25 & age <= 55)
 
 # Save data
 print("saving output")
-#write_csv(cps_data, "../../out/data/cps_borjas_renamed.csv")
 write_csv(cps_data, opt$out)
