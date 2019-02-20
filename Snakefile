@@ -17,30 +17,60 @@ configfile: "config.yaml"
 SUBSET =  glob_wildcards(config["src_data_specs"] +
             "subset_{iFile}.json").iFile
 
-print(SUBSET)
 
 # --- Build Rules --- #
 
 rule all:
     input:
-        graph = config["out_analysis"] + "cps_trend_no_high_school.pdf",
-        data = expand(config["out_data"] +
+        graph = config["out_figures"] + "cps_trend_no_hs_vs_not_miami.pdf",
+        data_fig = expand(config["out_data"] +
                     "cps_trend_{iSubset}.csv",
-                    iSubset= SUBSET)
+                    iSubset= SUBSET),
+        data_reg = config["out_data"] + "cps_did_no_hs_card.csv"
 
-rule graphs:
+# rule estimate_did:
+#     input:
+#         script = config["src_analysis"] + "estimate_did_card.R",
+#         data   = config["out_data"] + "cps_77-93_men_clean.csv"
+#     output:
+#         estimates = config["out_analysis"] + "did_estimates_card.rds"
+#     log:
+#         config["log"] + "estimate_did_card.Rout"
+#     shell:
+#         "Rscript {input.script} \
+#             --data {input.data} \
+#             --out {output.estimates} > {log} {LOGALL}"
+
+rule make_did_data:
     input:
-        script            = config["src_analysis"] + "plot_trend.R",
-        data              = config["out_data"] + "cps_trend_no_high_school_not_miami.csv"
+        script = config["src_analysis"] + "make_did_data.R",
+        data   = config["out_data"] + "cps_77-93_men_clean.csv"
     output:
-        out               = config["out_analysis"] + "cps_trend_no_high_school.pdf"
+        out    = config["out_data"] + "cps_did_no_hs_card.csv"
     log:
-        config["log"] + "plot_trend.Rout"
+        config["log"] + "cps_did_no_hs_card.Rout"
     shell:
         "Rscript {input.script} \
             --data {input.data} \
             --out {output.out} > {log} {LOGALL}"
+<<<<<<< HEAD
 0.
+=======
+
+rule graphs:
+    input:
+        script  = config["src_figures"] + "plot_trend.R",
+        data    = config["out_data"] + "cps_trend_no_high_school_not_miami.csv"
+    output:
+        fig     = config["out_figures"] + "cps_trend_no_hs_vs_not_miami.pdf"
+    log:
+        config["log"] + "plot_trend_no_hs_vs_not_miami.Rout"
+    shell:
+        "Rscript {input.script} \
+            --data {input.data} \
+            --out {output.fig} > {log} {LOGALL}"
+
+>>>>>>> 7b7581523d89a64a9b06d0b10197dae408d59e05
 
 rule compute_wage_trend:
     input:
