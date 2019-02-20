@@ -16,15 +16,43 @@ configfile: "config.yaml"
 
 SUBSET =  glob_wildcards(config["src_data_specs"] +
             "subset_{iFile}.json").iFile
+
 print(SUBSET)
 
 # --- Build Rules --- #
 
 rule all:
     input:
-        data = expand(config["out_data"] +
+        data_fig = expand(config["out_data"] +
                     "cps_trend_{iSubset}.csv",
-                    iSubset= SUBSET)
+                    iSubset= SUBSET),
+        data_reg = config["out_data"] + "cps_did_no_hs_card.csv"
+
+# rule estimate_did:
+#     input:
+#         script = config["src_analysis"] + "estimate_did_card.R",
+#         data   = config["out_data"] + "cps_77-93_men_clean.csv"
+#     output:
+#         estimates = config["out_analysis"] + "did_estimates_card.rds"
+#     log:
+#         config["log"] + "estimate_did_card.Rout"
+#     shell:
+#         "Rscript {input.script} \
+#             --data {input.data} \
+#             --out {output.estimates} > {log} {LOGALL}"
+
+rule make_did_data:
+    input:
+        script = config["src_analysis"] + "make_did_data.R",
+        data   = config["out_data"] + "cps_77-93_men_clean.csv"
+    output:
+        out    = config["out_data"] + "cps_did_no_hs_card.csv"
+    log:
+        config["log"] + "cps_did_no_hs_card.Rout"
+    shell:
+        "Rscript {input.script} \
+            --data {input.data} \
+            --out {output.out} > {log} {LOGALL}"
 
 rule compute_wage_trend:
     input:
