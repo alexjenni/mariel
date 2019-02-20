@@ -17,13 +17,12 @@ configfile: "config.yaml"
 SUBSET =  glob_wildcards(config["src_data_specs"] +
             "subset_{iFile}.json").iFile
 
-print(SUBSET)
 
 # --- Build Rules --- #
 
 rule all:
     input:
-        graph = config["out_analysis"] + "cps_trend_no_high_school.pdf",
+        graph = config["out_figures"] + "cps_trend_no_hs_vs_not_miami.pdf",
         data_fig = expand(config["out_data"] +
                     "cps_trend_{iSubset}.csv",
                     iSubset= SUBSET),
@@ -57,16 +56,16 @@ rule make_did_data:
 
 rule graphs:
     input:
-        script            = config["src_analysis"] + "plot_trend.R",
-        data              = config["out_data"] + "cps_trend_no_high_school_not_miami.csv"
+        script  = config["src_figures"] + "plot_trend.R",
+        data    = config["out_data"] + "cps_trend_no_high_school_not_miami.csv"
     output:
-        out               = config["out_analysis"] + "cps_trend_no_high_school.pdf"
+        fig     = config["out_figures"] + "cps_trend_no_hs_vs_not_miami.pdf"
     log:
-        config["log"] + "plot_trend.Rout"
+        config["log"] + "plot_trend_no_hs_vs_not_miami.Rout"
     shell:
         "Rscript {input.script} \
             --data {input.data} \
-            --out {output.out} > {log} {LOGALL}"
+            --out {output.fig} > {log} {LOGALL}"
 
 
 rule compute_wage_trend:

@@ -1,28 +1,33 @@
-library('ggplot2')
+#' plot_trend.R
+#'
+#' contributors: @alexjenni, @miriam
+#'
+#' Plot trend in mean log wage
+#'
+
 library(optparse)
-library(haven)
 library(readr)
 library(dplyr)
 library(rlist)
+library(ggplot2)
 
 # CLI parsing
 option_list = list(
-  make_option(c("-d", "--data"),
-              type = "character",
-              default = NULL,
-              help = "a csv file name",
-              metavar = "character"),
-  make_option(c("-o", "--out"),
-              type = "character",
-              default = "out.rds",
-              help = "output file name [default = %default]",
-              metavar = "character")
+   make_option(c("-d", "--data"),
+               type = "character",
+               default = NULL,
+               help = "a csv file name",
+               metavar = "character"),
+	make_option(c("-o", "--out"),
+                type = "character",
+                default = "out.pdf",
+                help = "output file name [default = %default]",
+                metavar = "character")
 );
-
-print(option_list)
 
 opt_parser = OptionParser(option_list = option_list);
 opt = parse_args(opt_parser);
+print(opt)
 
 if (is.null(opt$data)){
   print_help(opt_parser)
@@ -31,8 +36,8 @@ if (is.null(opt$data)){
 
 # Load data
 print("Loading data")
-miami <- read_csv("opt$data")
-not_miami <- read_csv("opt$data")
+miami <- read_csv(opt$data)
+not_miami <- read_csv(opt$data)
 
 cps_ready <- union(miami, not_miami)
 
@@ -48,5 +53,3 @@ cps_trend_no_high_school <- ggplot(cps_ready) +
   theme_classic()
 
 ggsave(opt$out, cps_trend_no_high_school)
-
-
