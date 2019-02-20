@@ -45,6 +45,7 @@ cps_data <- cps_data %>%
            cpi99,
            age,
            statefip,
+           labforce,
            msa_code=metarea,
            weights=asecwt,
            hispan,
@@ -97,14 +98,15 @@ cps_data <- cps_data %>%
 # Restrictions
 cps_data <- cps_data %>%
     filter(weekly_wage > 0) %>%                             # keep men with positive hourly wages
-    filter(age >=25 & age <= 55) %>%
+    filter(age >=25 & age < 0) %>%
     filter(hispanic==0) %>%                                 # keep non-hispanic men
     filter(emp_type!=10 & emp_type!=13 & emp_type!=14) %>%  # drop self-employed
+    filter(labforce==2)  %>%                                # drop men outside of the labor force
     filter(empstat !=1)                                     # drop members of army force
 
 # Drop variables
 cps_data <- cps_data %>%
-      select(-educ, -hispan, -hispanic, -emp_type, -empstat)
+      select(-educ, -hispan, -hispanic, -emp_type, -empstat, -labforce)
 
 # Save data
 print("saving output")
