@@ -4,3 +4,4 @@ out/*
 mariel.Rproj
 src/data/*
 *.pdf
+.Rhistory
