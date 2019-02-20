@@ -7,7 +7,7 @@
 
 # Libraries
 library(optparse)
-library(haven)
+library(rjson)
 library(readr)
 library(dplyr)
 
@@ -46,11 +46,14 @@ if (is.null(opt$subset)){
 print("Loading data")
 cps_data <- read_csv(opt$data)
 
-# Rename variables
+# Load Subset Condition
+data_filter <- fromJSON(file = opt$subset)
+
+# Filter and collapse data set
 print("Collapse log wage")
 cps_data_subsample <- cps_data %>%
-    group_by(year, miami) %>% 
-    filter(opt$subset) %>% 
+    group_by(year, miami) %>%
+    filter(eval(parse(text = data_filter$KEEP_CONDITION))) %>%
     summarise(log_weekly_wage=mean(log_weekly_wage))
 
 # Save data

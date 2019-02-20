@@ -7,3 +7,4 @@ logs/*
 *.pdf
 *.Rout
 .Rhistory
+.Rproj.user
