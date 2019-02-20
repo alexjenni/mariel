@@ -1,2 +1,31 @@
-Error in library(optparse) : there is no package called 'optparse'
-Execution halted
+
+Attachement du package : 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+[1] "Loading data"
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  FOODSTMP = col_logical(),
+  EDUC99 = col_logical()
+)
+See spec(...) for full column specifications.
+Warning: 120465 parsing failures.
+   row      col           expected actual                         file
+125754 FOODSTMP 1/0/T/F/TRUE/FALSE      2 'src/data/cps_77-93_men.csv'
+125774 FOODSTMP 1/0/T/F/TRUE/FALSE      2 'src/data/cps_77-93_men.csv'
+125779 FOODSTMP 1/0/T/F/TRUE/FALSE      2 'src/data/cps_77-93_men.csv'
+125785 FOODSTMP 1/0/T/F/TRUE/FALSE      2 'src/data/cps_77-93_men.csv'
+125788 FOODSTMP 1/0/T/F/TRUE/FALSE      2 'src/data/cps_77-93_men.csv'
+...... ........ .................. ...... ............................
+See problems(...) for more details.
+
+[1] "Rename and generate variables"
+[1] "saving output"

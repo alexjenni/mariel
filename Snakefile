@@ -21,7 +21,23 @@ NON_HISP = config["src_data_specs"] + "subset_non_hispanic.json"
 
 rule all:
     input:
-        data = config["out_data"] + "cps_borjas_renamed.csv"
+        data = config["out_data"] + "cps_trend_no_high_school.csv"
+
+rule compute_wage_trend:
+    input:
+        script = config["src_analysis"] + "compute_wage_trend.R",
+        data = config["out_data"] + "cps_borjas_renamed.csv",
+        subset = config["src_data_specs"] + "subset_educ_group_1.json"
+    output:
+        out = config["out_data"] + "cps_trend_no_high_school.csv"
+    log:
+        config["log"] + "compute_wage_trend.Rout"
+    shell:
+        "Rscript {input.script} \
+            --data {input.data} \
+            --subset {input.subset} \
+            --out {output.out} > {log} {LOGALL}"
+
 
 rule rename_vars:
     input:
