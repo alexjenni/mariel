@@ -13,63 +13,54 @@ library(ggplot2)
 
 # CLI parsing
 option_list = list(
-   make_option(c("-d", "--data_not_miami"),
-               type = "character",
-               default = NULL,
-               help = "a csv file name",
-               metavar = "character"),
    make_option(c("-e", "--data_miami"),
                type = "character",
                default = NULL,
                help = "a csv file name",
                metavar = "character"),
-   make_option(c("-p", "--data_placebo"),
+   make_option(c("-p", "--data_control"),
                type = "character",
                default = NULL,
                help = "a csv file name",
                metavar = "character"),
 	make_option(c("-o", "--out"),
                 type = "character",
-                default = "out.pdf",
+                default = "figure_out.pdf",
                 help = "output file name [default = %default]",
-                metavar = "character"),
-	make_option(c("-l", "--out_placebo"),
-	            type = "character",
-	            default = "out.pdf",
-	            help = "output file name [default = %default]",
-	            metavar = "character")
+                metavar = "character")
 );
 
 opt_parser = OptionParser(option_list = option_list);
 opt = parse_args(opt_parser);
-print(opt)
 
-if (is.null(opt$data_not_miami)){
-  print_help(opt_parser)
-  stop("Input data must be provided", call. = FALSE)
-}
 if (is.null(opt$data_miami)){
   print_help(opt_parser)
-  stop("Input data must be provided", call. = FALSE)
+  stop("Input data for Miami must be provided", call. = FALSE)
 }
-if (is.null(opt$data_placebo)){
+if (is.null(opt$data_control)){
   print_help(opt_parser)
-  stop("Input data must be provided", call. = FALSE)
+  stop("Input data for control group must be provided", call. = FALSE)
 }
+
 # Load data
 print("Loading data")
 miami <- read_csv(opt$data_miami)
-not_miami <- read_csv(opt$data_not_miami)
-placebo <- read_csv(opt$data_placebo)
+control <- read_csv(opt$data_control)
 
+# Create label for control group
+if (grepl("not_miami",opt$data_control)){
+  lab_control <- "All other US cities"
+} else if(grepl("card",opt$data_control)) {
+  lab_control <- "Atlanta, LA, Houston and Tampa"
+} else {
+  lab_control <- "Control group"
+}
 
-#Generate graph miami vs not miami
-cps_ready <- union(miami, not_miami)
-
+# Plot graph miami vs. control group
+cps_ready <- union(miami, control)
 cps_ready$miami <- ordered(cps_ready$miami,
-                           labels = c("All other US cities", "Miami"))
-
-cps_trend_no_high_school <- ggplot(cps_ready) +
+                           labels = c(lab_control, "Miami"))
+cps_trend <- ggplot(cps_ready) +
   geom_point(aes(x = year, y = log_weekly_wage, colour = miami), size = 4) +
   geom_line(aes(x = year, y = log_weekly_wage, colour = miami, group = miami), size = 2) +
   geom_vline(aes(xintercept = 1980)) +
@@ -77,20 +68,4 @@ cps_trend_no_high_school <- ggplot(cps_ready) +
   scale_color_manual(values=c("red","blue")) +
   theme_classic()
 
-ggsave(opt$out, cps_trend_no_high_school, width = 30, height = 20, units = "cm")
-
-#Generate graph miami vs placebo
-cps_ready_placebo <- union(miami, placebo)
-
-cps_ready_placebo$miami <- ordered(cps_ready_placebo$miami,
-                           labels = c("Atlanta, LA, Houston, Tampa", "Miami"))
-
-cps_trend_no_high_school_placebo <- ggplot(cps_ready_placebo) +
-  geom_point(aes(x = year, y = log_weekly_wage, colour = miami), size = 4) +
-  geom_line(aes(x = year, y = log_weekly_wage, colour = miami, group = miami), size = 2) +
-  geom_vline(aes(xintercept = 1980)) +
-  scale_x_continuous(name="year", breaks=seq(1975,1995,1)) +
-  scale_color_manual(values=c("red","blue")) +
-  theme_classic()
-
-ggsave(opt$out_placebo, cps_trend_no_high_school_placebo, width = 30, height = 20, units = "cm")
+ggsave(opt$out, cps_trend, width = 30, height = 20, units = "cm")

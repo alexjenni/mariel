@@ -8,24 +8,22 @@ LOGALL = "2>&1"  # put 2 (errors) wherever 1 goes (standard log)
 configfile: "config.yaml"
 
 # --- Iterable Lists --- #
-# CONTROL_SUBSET = glob_wildcards(config["src_data_specs"] + "{iFile}.json").iFile
-# CONTROL_SUBSET = list(filter(lambda x: x.endswith("_plus_miami"), CONTROL_SUBSET))
-
-# EDUC_SUBSET = glob_wildcards(config["src_data_specs"] + "{iFile}.json").iFile
-# EDUC_SUBSET = list(filter(lambda x: x.startswith("subset_educ"), EDUC_SUBSET))
-
-SUBSET =  glob_wildcards(config["src_data_specs"] +
+SUBSETS =  glob_wildcards(config["src_data_specs"] +
             "subset_{iFile}.json").iFile
+CONTROLS = glob_wildcards(config["src_data_specs"] +
+            "subset_no_high_school_{iFile}.json").iFile
+CONTROLS.remove('miami')                    # remove miami from
 
 
 # --- Build Rules --- #
-
 rule all:
     input:
-        graph = config["out_figures"] + "cps_trend_no_hs_vs_not_miami.pdf",
+        graph = expand(config["out_figures"] +
+                    "trend_log_wage_no_hs_vs_{iControl}.pdf",
+                    iControl= CONTROLS),
         data_fig = expand(config["out_data"] +
                     "cps_trend_{iSubset}.csv",
-                    iSubset= SUBSET),
+                    iSubset= SUBSETS),
         data_reg = config["out_data"] + "cps_did_no_hs_card.csv"
 
 # rule estimate_did:
@@ -57,21 +55,17 @@ rule make_did_data:
 rule graphs:
     input:
         script      = config["src_figures"] + "plot_trend.R",
-        data_miami        = config["out_data"] + "cps_trend_no_high_school_miami.csv",
-        data_not_miami        = config["out_data"] + "cps_trend_no_high_school_not_miami.csv",
-        data_placebo        = config["out_data"] + "cps_trend_no_high_school_placebo_not_miami.csv"
+        data_miami  = config["out_data"] + "cps_trend_no_high_school_miami.csv",
+        data_control= config["out_data"] + "cps_trend_no_high_school_{iControl}.csv"
     output:
-        out = config["out_figures"] + "cps_trend_no_hs_vs_not_miami.pdf",
-        out_placebo = config["out_figures"] + "cps_trend_no_hs_vs_placebo_not_miami.pdf"
+        fig         = config["out_figures"] + "trend_log_wage_no_hs_vs_{iControl}.pdf"
     log:
-        config["log"] + "plot_trend.Rout"
+        config["log"] + "plot_trend_log_wage_no_hs_miami_vs_{iControl}.Rout"
     shell:
         "Rscript {input.script} \
             --data_miami {input.data_miami} \
-            --data_not_miami {input.data_not_miami} \
-            --data_placebo {input.data_placebo} \
-            --out_placebo {output.out_placebo} \
-            --out {output.out} > {log} {LOGALL}"
+            --data_control {input.data_control} \
+            --out {output.fig} > {log} {LOGALL}"
 
 rule compute_wage_trend:
     input:
