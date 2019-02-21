@@ -1,3 +1,0 @@
-{
-    "KEEP_CONDITION": "educ_group != '<12 years' & miami == 1"
-}
