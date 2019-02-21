@@ -12,8 +12,9 @@ SUBSETS =  glob_wildcards(config["src_data_specs"] +
             "subset_{iFile}.json").iFile
 CONTROLS = glob_wildcards(config["src_data_specs"] +
             "subset_no_high_school_{iFile}.json").iFile
-CONTROLS.remove('miami')                    # remove miami from
-
+CONTROLS.remove('miami')                    # remove miami from controls
+print("List of control groups:")
+print(CONTROLS)
 
 # --- Build Rules --- #
 rule all:
@@ -24,7 +25,9 @@ rule all:
         data_fig = expand(config["out_data"] +
                     "cps_trend_{iSubset}.csv",
                     iSubset= SUBSETS),
-        data_reg = config["out_data"] + "cps_did_no_hs_card.csv"
+        data_reg = expand(config["out_data"] +
+                    "cps_did_no_hs_{iControl}.csv",
+                    iControl= CONTROLS)
 
 # rule estimate_did:
 #     input:
@@ -42,14 +45,17 @@ rule all:
 rule make_did_data:
     input:
         script = config["src_analysis"] + "make_did_data.R",
-        data   = config["out_data"] + "cps_77-93_men_clean.csv"
+        data   = config["out_data"] + "cps_77-93_men_clean.csv",
     output:
-        out    = config["out_data"] + "cps_did_no_hs_card.csv"
+        out    = config["out_data"] + "cps_did_no_hs_{iControl}.csv"
+    params:
+        control= "{iControl}"
     log:
-        config["log"] + "cps_did_no_hs_card.Rout"
+        config["log"] + "cps_did_no_hs_{iControl}.Rout"
     shell:
         "Rscript {input.script} \
             --data {input.data} \
+            --control {params.control} \
             --out {output.out} > {log} {LOGALL}"
 
 rule graphs:
