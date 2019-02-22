@@ -28,25 +28,28 @@ rule all:
                      iEduc    = EDUCS,
                      iControl = CONTROLS),
         tables = expand(config["out_tables"] +
-                     "table_did_{iEduc}-{iControl}.txt",
-                     iEduc    = EDUCS,
-                     iControl = CONTROLS)
+                     "table_did_{iEduc}.txt",
+                     iEduc    = EDUCS)
 
 # Tables
 rule make_tabs :
     input:
-        script    = config["src_tables"] + "table_did.R",
-        estimates = config["out_analysis"] +
-                    "estimates_did_log_wage_{iEduc}-{iControl}.rds"
+        script    = config["src_tables"] + "table_did_{iEduc}.R",
+        estimates = expand(config["out_analysis"] +
+                    "estimates_did_log_wage_{iEduc}-{iControl}.rds",
+                    iEduc = EDUCS,
+                    iControl = CONTROLS)
     output:
-        tex =config["out_tables"] + "table_did_{iEduc}-{iControl}.txt"
+        tex =config["out_tables"] + "table_did_{iEduc}.txt"
     params:
-        filepath  = config["out_analysis"]
+        filepath  = config["out_analysis"],
+        model_exp = "estimates_did_log_wage_{iEduc}-*.rds"
     log:
-        config["log"] + "table_did_{iEduc}-{iControl}.Rout"
+        config["log"] + "table_did_{iEduc}.Rout"
     shell:
         "Rscript {input.script} \
             --filepath {params.filepath} \
+            --models {params.model_exp} \
             --out {output.tex} > {log} {LOGALL}"
 
 rule estimate_did:
