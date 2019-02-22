@@ -14,6 +14,7 @@ EDUCS = glob_wildcards(config["src_data_specs"] +
             "subset_edu_{iFile}.json").iFile
 MIAMI = ['miami']
 CONTROLS= list(set(MSAS) - set(MIAMI))
+OUTCOME =['log_weekly_wage']
 print("List of control groups:")
 print(MSAS)
 print(EDUCS)
@@ -22,47 +23,49 @@ print(CONTROLS)
 # --- Build Rules --- #
 rule all:
     input:
-        graph = expand(config["out_figures"] +
+        graphs = expand(config["out_figures"] +
                      "trend_log_wage_{iEduc}_miami_vs_{iControl}.pdf",
                      iEduc    = EDUCS,
+                     iControl = CONTROLS),
+        tables = expand(config["out_tables"] +
+                     "table_did_{iEduc}-{iControl}.txt",
+                     iEduc    = EDUCS,
                      iControl = CONTROLS)
-        # estimates = expand(config["out_analysis"] +
-        #             "estimates_did_log_wage_{iControl}.rds",
-        #             iControl= CONTROLS)
 
 # Tables
-# rule estimate_did:
-#     input:
-#         script    = config["src_analysis"] + "estimate_did.R",
-#         data      = config["out_data"] + "cps_did_no_hs_{iControl}.csv"
-#     output:
-#         estimates = config["out_analysis"] + "estimates_did_log_wage_{iControl}.rds"
-#     params:
-#         treat     = "miami",
-#         subset    = "bla"
-#     log:
-#         config["log"] + "estimate_did_log_wage_{iControl}.Rout"
-#     shell:
-#         "Rscript {input.script} \
-#             --data {input.data} \
-#             --treat {params.treat} \
-#             --out {output.estimates} > {log} {LOGALL}"
-#
-# rule make_did_data:
-#     input:
-#         script = config["src_analysis"] + "make_did_data.R",
-#         data   = config["out_data"] + "cps_77-93_men_clean.csv",
-#     output:
-#         out    = config["out_data"] + "cps_did_no_hs_{iControl}.csv"
-#     params:
-#         control= "{iControl}"
-#     log:
-#         config["log"] + "cps_did_no_hs_{iControl}.Rout"
-#     shell:
-#         "Rscript {input.script} \
-#             --data {input.data} \
-#             --control {params.control} \
-#             --out {output.out} > {log} {LOGALL}"
+rule make_tabs :
+    input:
+        script    = config["src_tables"] + "table_did.R",
+        estimates = config["out_analysis"] +
+                    "estimates_did_log_wage_{iEduc}-{iControl}.rds"
+    output:
+        tex =config["out_tables"] + "table_did_{iEduc}-{iControl}.txt"
+    params:
+        filepath  = config["out_analysis"]
+    log:
+        config["log"] + "table_did_{iEduc}-{iControl}.Rout"
+    shell:
+        "Rscript {input.script} \
+            --filepath {params.filepath} \
+            --out {output.tex} > {log} {LOGALL}"
+
+rule estimate_did:
+    input:
+        script  = config["src_analysis"] + "estimate_did.R",
+        data    = config["out_data"] + "cps_77-93_men_clean.csv",
+        subset  = config["src_data_specs"] + "subset_edu_{iEduc}.json",
+        control = config["src_data_specs"] + "subset_msa_{iControl}.json"
+    output:
+        estimates = config["out_analysis"] +
+                    "estimates_did_log_wage_{iEduc}-{iControl}.rds"
+    log:
+        config["log"] + "estimate_did_log_wage_{iEduc}-{iControl}.Rout"
+    shell:
+        "Rscript {input.script} \
+            --data {input.data} \
+            --subset {input.subset} \
+            --control {input.control} \
+            --out {output.estimates} > {log} {LOGALL}"
 
 # Figures
 rule graphs:
