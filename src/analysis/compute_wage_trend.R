@@ -1,8 +1,8 @@
-#' rename_variables.R
+#' compute_wage_trend.R
 #'
-#' contributors: @lachlandeer, @julianlanger, @alexjenni, @mventu
+#' contributors:  @alexjenni
 #'
-#' Select desired subsample from CPS dataset
+#' Compute the average log wage by year for a subset of the data
 #'
 
 # Libraries
@@ -18,10 +18,15 @@ option_list = list(
               default = NULL,
               help = "csv file name",
               metavar = "character"),
-  make_option(c("-s", "--subset"),
+  make_option(c("-s1", "--subset1"),
               type = "character",
               default = NULL,
-              help = "A condition to select a subset of data",
+              help = "A first condition to select a subset of data",
+              metavar = "character"),
+  make_option(c("-s2", "--subset2"),
+              type = "character",
+              default = NULL,
+              help = "A second condition to select a subset of data",
               metavar = "character"),
   make_option(c("-o", "--out"),
               type = "character",
@@ -37,9 +42,9 @@ if (is.null(opt$data)){
   print_help(opt_parser)
   stop("At least one argument must be supplied (input file).n", call. = FALSE)
 }
-if (is.null(opt$subset)){
+if (is.null(opt$subset1) | is.null(opt$subset2)){
   print_help(opt_parser)
-  stop("A subsetting condition must be supplied", call. = FALSE)
+  stop("Two subsetting conditions must be supplied", call. = FALSE)
 }
 
 # Load data
@@ -47,13 +52,15 @@ print("Loading data")
 cps_data <- read_csv(opt$data)
 
 # Load Subset Condition
-data_filter <- fromJSON(file = opt$subset)
+data_filter1 <- fromJSON(file = opt$subset1)
+data_filter2 <- fromJSON(file = opt$subset2)
 
 # Filter and collapse data set
 print("Collapse log wage")
 cps_data_subsample <- cps_data %>%
     group_by(year, miami) %>%
-    filter(eval(parse(text = data_filter$KEEP_CONDITION))) %>%
+    filter(eval(parse(text = data_filter1$KEEP_CONDITION))) %>%
+    filter(eval(parse(text = data_filter2$KEEP_CONDITION))) %>%
     mutate(tot_log_weekly_wage = weights * log_weekly_wage) %>%     # use survey weights
     summarise(log_weekly_wage=mean(log_weekly_wage),
               log_weekly_wage_wgt=mean(tot_log_weekly_wage)/mean(weights),

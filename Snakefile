@@ -8,65 +8,72 @@ LOGALL = "2>&1"  # put 2 (errors) wherever 1 goes (standard log)
 configfile: "config.yaml"
 
 # --- Iterable Lists --- #
-SUBSETS =  glob_wildcards(config["src_data_specs"] +
-            "subset_{iFile}.json").iFile
-CONTROLS = glob_wildcards(config["src_data_specs"] +
-            "subset_no_high_school_{iFile}.json").iFile
-CONTROLS.remove('miami')                    # remove miami from controls
+MSAS =  glob_wildcards(config["src_data_specs"] +
+            "subset_msa_{iFile}.json").iFile
+EDUCS = glob_wildcards(config["src_data_specs"] +
+            "subset_edu_{iFile}.json").iFile
+MIAMI = ['miami']
+CONTROLS= list(set(MSAS) - set(MIAMI))
 print("List of control groups:")
+print(MSAS)
+print(EDUCS)
 print(CONTROLS)
 
 # --- Build Rules --- #
 rule all:
     input:
         graph = expand(config["out_figures"] +
-                    "trend_log_wage_no_hs_vs_{iControl}.pdf",
-                    iControl= CONTROLS),
-        data_fig = expand(config["out_data"] +
-                    "cps_trend_{iSubset}.csv",
-                    iSubset= SUBSETS),
-        data_reg = expand(config["out_data"] +
-                    "cps_did_no_hs_{iControl}.csv",
-                    iControl= CONTROLS)
+                     "trend_log_wage_{iEduc}_miami_vs_{iControl}.pdf",
+                     iEduc    = EDUCS,
+                     iControl = CONTROLS)
+        # estimates = expand(config["out_analysis"] +
+        #             "estimates_did_log_wage_{iControl}.rds",
+        #             iControl= CONTROLS)
 
+# Tables
 # rule estimate_did:
 #     input:
-#         script = config["src_analysis"] + "estimate_did_card.R",
-#         data   = config["out_data"] + "cps_77-93_men_clean.csv"
+#         script    = config["src_analysis"] + "estimate_did.R",
+#         data      = config["out_data"] + "cps_did_no_hs_{iControl}.csv"
 #     output:
-#         estimates = config["out_analysis"] + "did_estimates_card.rds"
+#         estimates = config["out_analysis"] + "estimates_did_log_wage_{iControl}.rds"
+#     params:
+#         treat     = "miami",
+#         subset    = "bla"
 #     log:
-#         config["log"] + "estimate_did_card.Rout"
+#         config["log"] + "estimate_did_log_wage_{iControl}.Rout"
 #     shell:
 #         "Rscript {input.script} \
 #             --data {input.data} \
+#             --treat {params.treat} \
 #             --out {output.estimates} > {log} {LOGALL}"
 #
-rule make_did_data:
-    input:
-        script = config["src_analysis"] + "make_did_data.R",
-        data   = config["out_data"] + "cps_77-93_men_clean.csv",
-    output:
-        out    = config["out_data"] + "cps_did_no_hs_{iControl}.csv"
-    params:
-        control= "{iControl}"
-    log:
-        config["log"] + "cps_did_no_hs_{iControl}.Rout"
-    shell:
-        "Rscript {input.script} \
-            --data {input.data} \
-            --control {params.control} \
-            --out {output.out} > {log} {LOGALL}"
+# rule make_did_data:
+#     input:
+#         script = config["src_analysis"] + "make_did_data.R",
+#         data   = config["out_data"] + "cps_77-93_men_clean.csv",
+#     output:
+#         out    = config["out_data"] + "cps_did_no_hs_{iControl}.csv"
+#     params:
+#         control= "{iControl}"
+#     log:
+#         config["log"] + "cps_did_no_hs_{iControl}.Rout"
+#     shell:
+#         "Rscript {input.script} \
+#             --data {input.data} \
+#             --control {params.control} \
+#             --out {output.out} > {log} {LOGALL}"
 
+# Figures
 rule graphs:
     input:
         script      = config["src_figures"] + "plot_trend.R",
-        data_miami  = config["out_data"] + "cps_trend_no_high_school_miami.csv",
-        data_control= config["out_data"] + "cps_trend_no_high_school_{iControl}.csv"
+        data_miami  = config["out_analysis"] + "cps_trend_{iEduc}-miami.csv",
+        data_control= config["out_analysis"] + "cps_trend_{iEduc}-{iControl}.csv"
     output:
-        fig         = config["out_figures"] + "trend_log_wage_no_hs_vs_{iControl}.pdf"
+        fig         = config["out_figures"] + "trend_log_wage_{iEduc}_miami_vs_{iControl}.pdf"
     log:
-        config["log"] + "plot_trend_log_wage_no_hs_miami_vs_{iControl}.Rout"
+        config["log"] + "plot_trend_log_wage_{iEduc}_miami_vs_{iControl}.Rout"
     shell:
         "Rscript {input.script} \
             --data_miami {input.data_miami} \
@@ -75,19 +82,22 @@ rule graphs:
 
 rule compute_wage_trend:
     input:
-        script      = config["src_analysis"] + "compute_wage_trend.R",
-        data        = config["out_data"] + "cps_77-93_men_clean.csv",
-        subset      = config["src_data_specs"] + "subset_{iSubset}.json"
+        script  = config["src_analysis"] + "compute_wage_trend.R",
+        data    = config["out_data"] + "cps_77-93_men_clean.csv",
+        subset1 = config["src_data_specs"] + "subset_edu_{iEdu}.json",
+        subset2 = config["src_data_specs"] + "subset_msa_{iMsa}.json"
     output:
-        out = config["out_data"] + "cps_trend_{iSubset}.csv"
+        out = config["out_analysis"] + "cps_trend_{iEdu}-{iMsa}.csv"
     log:
-        config["log"] + "compute_wage_trend_{iSubset}.Rout"
+        config["log"] + "compute_wage_trend_{iEdu}-{iMsa}.Rout"
     shell:
         "Rscript {input.script} \
             --data {input.data} \
-            --subset {input.subset} \
+            --subset1 {input.subset1} \
+            --subset2 {input.subset2} \
             --out {output.out} > {log} {LOGALL}"
 
+# Data cleaning
 rule rename_vars:
     input:
         script = config["src_data_mgt"] + "clean_cps.R",
