@@ -28,8 +28,18 @@ rule all:
                      iEduc    = EDUCS,
                      iControl = CONTROLS),
         tables = expand(config["out_tables"] +
-                     "table_did_{iEduc}.txt",
-                     iEduc    = EDUCS)
+                     "table_did_{iEduc}.tex",
+                     iEduc    = EDUCS),
+        paper = "paper.pdf"
+
+#Produce paper
+rule tex2pdf_without_bib:
+    input:
+        tex = "paper.tex"
+    output:
+        pdf = "paper.pdf"
+    run:
+        shell("pdflatex paper.tex")
 
 # Tables
 rule make_tabs :
@@ -40,7 +50,7 @@ rule make_tabs :
                     iEduc = EDUCS,
                     iControl = CONTROLS)
     output:
-        tex =config["out_tables"] + "table_did_{iEduc}.txt"
+        tex =config["out_tables"] + "table_did_{iEduc}.tex"
     params:
         filepath  = config["out_analysis"],
         model_exp = "estimates_did_log_wage_{iEduc}-*.rds"
