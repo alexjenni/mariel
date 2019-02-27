@@ -1,8 +1,10 @@
 ## Snakefile - Mariel Boatlift
 ##
-## @alexjenni
+## @alexjenni @mventu
 
 LOGALL = "2>&1"  # put 2 (errors) wherever 1 goes (standard log)
+
+from pathlib import Path
 
 # --- Import a config file --- #
 configfile: "config.yaml"
@@ -12,6 +14,10 @@ MSAS =  glob_wildcards(config["src_data_specs"] +
             "subset_msa_{iFile}.json").iFile
 EDUCS = glob_wildcards(config["src_data_specs"] +
             "subset_edu_{iFile}.json").iFile
+FIGS = glob_wildcards(config["out_figures"] +
+            "{iFile}.pdf").iFile
+TABS = glob_wildcards(config["out_tables"] +
+            "{iFile}.tex").iFile
 MIAMI = ['miami']
 CONTROLS= list(set(MSAS) - set(MIAMI))
 OUTCOME =['log_weekly_wage']
@@ -23,23 +29,46 @@ print(CONTROLS)
 # --- Build Rules --- #
 rule all:
     input:
-        graphs = expand(config["out_figures"] +
-                     "trend_log_wage_{iEduc}_miami_vs_{iControl}.pdf",
-                     iEduc    = EDUCS,
-                     iControl = CONTROLS),
-        tables = expand(config["out_tables"] +
-                     "table_did_{iEduc}.tex",
-                     iEduc    = EDUCS),
-        paper = "paper.pdf"
-
-#Produce paper
-rule tex2pdf_without_bib:
-    input:
-        tex = "paper.tex"
+        #graphs = expand(config["out_figures"] +
+        #             "trend_log_wage_{iEduc}_miami_vs_{iControl}.pdf",
+        #             iEduc    = EDUCS,
+        #             iControl = CONTROLS),
+        #tables = expand(config["out_tables"] +
+        #             "table_did_{iEduc}.tex",
+        #             iEduc    = EDUCS),
+        paper = config["out_paper"] + "paper.pdf",
     output:
-        pdf = "paper.pdf"
-    run:
-        shell("pdflatex paper.tex")
+        paper = "pp4rs_assignment.pdf"
+    shell:
+        "cp {input.paper} {output.paper}"
+        #"Move-Item -Path {input.paper} -Destination {input.paper}"
+
+
+#Paper    : builds tex file instead of Rmd file, DON'T DELETE, IT COULD BE USEFUL IN LIFE
+#rule tex2pdf:
+    #input:
+    #    tex = "paper.tex"
+    #output:
+    #    pdf = "paper.pdf"
+    #run:
+    #    shell("pdflatex paper.tex")
+
+# Paper              : builds Rmd to pdf
+rule paper:
+    input:
+        paper = config["src_paper"] + "paper.Rmd",
+        runner = config["src_lib"] + "knit_rmd.R",
+        figures = expand(config["out_figures"] + "{iFigure}.pdf",
+                        iFigure = FIGS),
+        table = expand(config["out_tables"] + "{iTable}.tex",
+                        iTable = TABS)
+    output:
+        pdf = config["out_paper"] + "paper.pdf"
+    log:
+        config["log"] + "paper/paper.Rout"
+    shell:
+        "Rscript {input.runner} {input.paper} {output.pdf} \
+            > {log} 2>&1"
 
 # Tables
 rule make_tabs :
