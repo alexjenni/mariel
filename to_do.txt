@@ -1,19 +1,14 @@
 To Do List
 
-Cleaning R file
-- generate log weekly
-- verify sample restrictions (age)
-
-Sample restriction
-- generate control group indicator (Atlanta, Los Angeles, Houston, Tampa-St.Petersburg)
-- education groups
-
 Make figures
-- Figure 2, 3.a, 6.a
+- Figure 6.a ? Let's ignore this ?
 
-Make table
-- Table 5.a column 1 and 4
+- R-markdown / latex:
+	-write simple R-markdown file that pulls some of the results
+	-add it to the snakefile
 
+- write a short README
 
-- Snakemake
-- R-markdown / latex
+- do a final check of the comments in the file
+
+- check reproducibility with someone else
