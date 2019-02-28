@@ -2,7 +2,12 @@
 
 ## What this repo does
 
-We replicate (roughly) some figures and difference-in-difference estimates from "The wage impact of the Marielitos: a reappraisal" (Borjas, 2015). The replicated results are Figure 2, the Card placebo and Miami series in Figure 3A and columns "Card placebo" and "All cities" of Table 5A of the working paper. In addition to those results, which are computed using the subsample of high-school dropouts, we also provide analogous results for high-school graduates. We do not replicate exactly the results because we use a different reference year for the Consumer Price Index (CPI) and are not able to reproduce exactly some of the sample restrictions of the original study. Nevertheless, the results are quantitatively similar.
+We replicate (roughly) some figures and difference-in-difference estimates from _The wage impact of the Marielitos: a reappraisal_ (Borjas, 2015). The replicated results are:
+ 1. Figure 2
+ 2. The Card placebo and Miami series in Figure 3A
+ 3. Columns "Card placebo" and "All cities" of Table 5A of the working paper.
+
+ In addition to those results, which are computed using the subsample of high-school dropouts, we also provide analogous results for high-school graduates. We do not replicate exactly the original coefficients because we use a different reference year for the Consumer Price Index (CPI) and are not able to reproduce exactly some of the sample restrictions of the original study. Nevertheless, the results are quantitatively very similar.
 
 Our weapons of choice are:
 
@@ -28,12 +33,10 @@ If you modify the packages used in this repo, you should rerun this command to s
 Type:
 
 ```
-snakemake all
+snakemake
 ```
 
 into your terminal and press `RETURN`
-
-See [`HELP.txt`](HELP.txt) for explanation of what the Snakemake Rules are doing.
 
 ## Install instructions
 
@@ -60,4 +63,4 @@ You can install snakemake as follows:
     ```
 
 ## References
-Borjas, George J. The Wage Impact of the Marielitos: A Reappraisal. No. w21588. National Bureau of Economic Research, 2015.
+Borjas, George J. _The Wage Impact of the Marielitos: A Reappraisal._ No. w21588. National Bureau of Economic Research, 2015.
