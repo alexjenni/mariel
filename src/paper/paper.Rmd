@@ -8,6 +8,8 @@ header-includes:
    - \usepackage{dcolumn}
    - \usepackage{amsthm}
    - \usepackage{amsmath}
+   - \usepackage{float}
+   - \usepackage{graphicx}
 output: pdf_document
 ---
 
@@ -15,28 +17,40 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction
+# Introduction
 
 This is the introduction. It will be a wonderful replication.
 
-## Summary Plots
+# Summary Plots
 
-There are many plots.
 
-```{r fig-sub, fig.align="center", echo = FALSE, fig.cap = 'Graphical depiction of first stage and reduced form for IV estimates of the economic return to schooling using quarter of birth', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.60\\linewidth', fig.asp = 1, fig.ncol = 1}
-knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_not_miami.pdf",
-                            "../../out/figures/trend_log_wage_no_hs_miami_vs_card.pdf",
-                            "../../out/figures/trend_log_wage_hs_more_miami_vs_not_miami.pdf",
-                            "../../out/figures/trend_log_wage_hs_more_miami_vs_card.pdf"))
+## 1. The trend in the wage of low-skill workers 1976-1992.
+
+```{r fig-nohs, fig.align="center", fig.pos="H", echo = FALSE, fig.cap = 'Log weekly wage of high school dropouts, Miami and all other US cities', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.60\\linewidth', fig.asp = 1, fig.ncol = 1}
+knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_not_miami.pdf"))
 ```
 
-## Regression Tables
+```{r fig-nohsc, fig.align="center", fig.pos="H", echo = FALSE, fig.cap = 'Log weekly wage of high school dropouts, Miami and control placebo city (weighted average of Atlanta, Los Angeles, Houston, and Tampa)', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.60\\linewidth', fig.asp = 1, fig.ncol = 1}
+knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_card.pdf"))
+```
+
+## 2. The trend in the wage of skilled workers 1976-1992.
+
+```{r fig-fighs, fig.align="center", fig.pos="H", echo = FALSE, fig.cap = 'Log weekly wage of high school graduates, Miami and all other US cities', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.50\\linewidth', fig.asp = 1, fig.ncol = 1}
+knitr::include_graphics( c("../../out/figures/trend_log_wage_hs_more_miami_vs_not_miami.pdf"))
+```
+
+```{r fig-fighsc, fig.align="center", fig.pos="H", echo = FALSE, fig.cap = 'Log weekly wage of high school graduates, Miami and control placebo city (weighted average of Atlanta, Los Angeles, Houston, and Tampa)', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.60\\linewidth', fig.asp = 1, fig.ncol = 1}
+knitr::include_graphics( c("../../out/figures/trend_log_wage_hs_more_miami_vs_card.pdf"))
+```
+
+
+# Regression Tables
 
 There are 2 tables in our paper.
-
 \input{../../out/tables/table_did_no_hs.tex}
 \input{../../out/tables/table_did_hs_more.tex}
 
-## Conclusion
+# Conclusion
 
 Best paper ever!
