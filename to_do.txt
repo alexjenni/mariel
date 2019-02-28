@@ -1,14 +1,4 @@
 To Do List
-
-Make figures
-- Figure 6.a ? Let's ignore this ?
-
-- R-markdown / latex:
-	-write simple R-markdown file that pulls some of the results
-	-add it to the snakefile
-
 - write a short README
-
-- do a final check of the comments in the file
-
+- finish writing up paper
 - check reproducibility with someone else

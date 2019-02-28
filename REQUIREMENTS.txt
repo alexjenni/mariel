@@ -1,0 +1,11 @@
+dplyr
+ggplot2
+here
+lfe
+optparse
+purrr
+readr
+rjson
+rlist
+rmarkdown
+stargazer

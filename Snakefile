@@ -1,26 +1,23 @@
 ## Snakefile - Mariel Boatlift
+##              Replicate some results from Borjas (2015)
 ##
 ## @alexjenni @mventu
 
 LOGALL = "2>&1"  # put 2 (errors) wherever 1 goes (standard log)
 
-from pathlib import Path
-
 # --- Import a config file --- #
 configfile: "config.yaml"
 
-# --- Iterable Lists --- #
+# --- Dictionaries --- #
 MSAS =  glob_wildcards(config["src_data_specs"] +
             "subset_msa_{iFile}.json").iFile
 EDUCS = glob_wildcards(config["src_data_specs"] +
             "subset_edu_{iFile}.json").iFile
-
 MIAMI = ['miami']
 CONTROLS= list(set(MSAS) - set(MIAMI))
-OUTCOME =['log_weekly_wage']
-
 
 # --- Build Rules --- #
+## all : moves pdf to root, builds project if missing dependency
 rule all:
     input:
         paper = config["out_paper"] + "paper.pdf",
@@ -30,7 +27,7 @@ rule all:
         "cp {input.paper} {output.paper}"
         #"Copy-Item -Path {input.paper} -Destination {output.paper}"
 
-# Paper : builds Rmd to pdf
+## paper : builds Rmd to pdf
 rule paper:
     input:
         paper = config["src_paper"] + "paper.Rmd",
@@ -49,6 +46,7 @@ rule paper:
             > {log} 2>&1"
 
 # Tables
+## make_tabs : construct regression tables
 rule make_tabs :
     input:
         script    = config["src_tables"] + "table_did_{iEduc}.R",
@@ -69,6 +67,7 @@ rule make_tabs :
             --models {params.model_exp} \
             --out {output.tex} > {log} {LOGALL}"
 
+## estimate_did: Estimate DiD regression
 rule estimate_did:
     input:
         script  = config["src_analysis"] + "estimate_did.R",
@@ -88,7 +87,8 @@ rule estimate_did:
             --out {output.estimates} > {log} {LOGALL}"
 
 # Figures
-rule graphs:
+## plot_trend: Plot trends in log wage
+rule plot_trend:
     input:
         script      = config["src_figures"] + "plot_trend.R",
         data_miami  = config["out_analysis"] + "cps_trend_{iEduc}-miami.csv",
@@ -103,6 +103,7 @@ rule graphs:
             --data_control {input.data_control} \
             --out {output.fig} > {log} {LOGALL}"
 
+## compute_wage_trend: Compute trend in log wage by subgroup
 rule compute_wage_trend:
     input:
         script  = config["src_analysis"] + "compute_wage_trend.R",
@@ -121,7 +122,8 @@ rule compute_wage_trend:
             --out {output.out} > {log} {LOGALL}"
 
 # Data cleaning
-rule rename_vars:
+## clean_cps: Clean data set and rename variables
+rule clean_cps:
     input:
         script = config["src_data_mgt"] + "clean_cps.R",
         data   = config["src_data"] + "cps_77-93_men.csv"
@@ -133,3 +135,20 @@ rule rename_vars:
         "Rscript {input.script} \
             --data {input.data} \
             --out {output.out} > {log} {LOGALL}"
+
+# --- R package resolution --- #
+
+## find_packages      : looks for R packages used across all scripts
+rule find_packages:
+    output:
+        "REQUIREMENTS.txt"
+    shell:
+        "bash find_r_packages.sh"
+
+## install_packages   : installs missing R packages
+rule install_packages:
+    input:
+        script = config["src_lib"] + "install_r_packages.R",
+        requirements = "REQUIREMENTS.txt"
+    shell:
+        "Rscript {input.script}"
