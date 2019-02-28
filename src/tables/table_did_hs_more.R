@@ -7,10 +7,9 @@
 
 # Libraries
 library(optparse)
-library(rlist)
-library(magrittr)
 library(purrr)
 library(stargazer)
+library(rlist)
 
 # CLI parsing
 option_list = list(
@@ -51,15 +50,12 @@ file_list <- Sys.glob(models)
 
 
 # Load into a list
+print("Loading estimates")
 data <- file_list %>%
             map(list.load)
 
-
-# Load into a list
-data <- file_list %>%
-  map(list.load)
-
 # Create Table
+print("Exporting tables")
 stargazer(data[[1]],
           data[[2]],
           initial.zero = TRUE,

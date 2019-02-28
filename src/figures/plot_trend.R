@@ -8,7 +8,6 @@
 library(optparse)
 library(readr)
 library(dplyr)
-library(rlist)
 library(ggplot2)
 
 # CLI parsing
@@ -57,6 +56,7 @@ if (grepl("not_miami",opt$data_control)){
 }
 
 # Plot graph miami vs. control group
+print("Plot trend")
 cps_ready <- union(miami, control)
 cps_ready$miami <- ordered(cps_ready$miami,
                            labels = c(lab_control, "Miami"))
@@ -68,4 +68,5 @@ cps_trend <- ggplot(cps_ready) +
   scale_color_manual(values=c("red","blue")) +
   theme_classic()
 
+print("Save trend")
 ggsave(opt$out, cps_trend, width = 30, height = 20, units = "cm")

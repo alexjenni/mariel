@@ -3,6 +3,7 @@
 #
 # Installs R packages required for project if not already installed
 #
+# Author: @lachlandeer
 
 # Load Requirements file
 packages <- as.list(read.delim("REQUIREMENTS.txt", sep= "\n",

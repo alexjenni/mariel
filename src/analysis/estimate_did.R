@@ -1,6 +1,6 @@
 #' estimate_did.R
 #'
-#' contributors: @alexjenni
+#' contributors: @alexjenni, @mventu
 #'
 #' Run a DiD regression on a (subset of) data
 #'
@@ -9,9 +9,9 @@
 library(optparse)
 library(rjson)
 library(readr)
-library(rlist)
 library(dplyr)
 library(lfe)
+library(rlist)
 
 # CLI parsing
 option_list = list(

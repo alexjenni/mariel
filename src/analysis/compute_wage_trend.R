@@ -1,6 +1,6 @@
 #' compute_wage_trend.R
 #'
-#' contributors:  @alexjenni
+#' contributors:  @alexjenni, @mventu
 #'
 #' Compute the average log wage by year for a subset of the data
 #'

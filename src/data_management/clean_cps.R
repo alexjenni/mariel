@@ -1,13 +1,12 @@
 #' rename_variables.R
 #'
-#' contributors: @lachlandeer, @julianlanger, @alexjenni, @mventu
+#' contributors: @alexjenni, @mventu
 #'
-#' Adds meaningful variable names to the original data set
+#' Clean raw data set and add meaningful variable names
 #'
 
 # Libraries
 library(optparse)
-library(haven)
 library(readr)
 library(dplyr)
 
@@ -30,7 +29,7 @@ opt = parse_args(opt_parser);
 
 if (is.null(opt$data)){
   print_help(opt_parser)
-  stop("At least one argument must be supplied (input file).n", call. = FALSE)
+  stop("One argument must be supplied (input file).n", call. = FALSE)
 }
 
 # Load data
@@ -105,7 +104,7 @@ cps_data <- cps_data %>%
     filter(labforce==2)  %>%                                # drop men outside of the labor force
     filter(empstat !=1)  %>%                                 # drop members of army force
     filter(weights > 0)
-    
+
 # Trim 1% top and 1% bottom earners
 cps_data <- cps_data %>%
     filter(weekly_wage > quantile(cps_data$weekly_wage, 0.01) &
