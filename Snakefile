@@ -16,15 +16,11 @@ EDUCS = glob_wildcards(config["src_data_specs"] +
             "subset_edu_{iFile}.json").iFile
 FIGS = glob_wildcards(config["out_figures"] +
             "{iFile}.pdf").iFile
-TABS = glob_wildcards(config["out_tables"] +
-            "{iFile}.tex").iFile
+
 MIAMI = ['miami']
 CONTROLS= list(set(MSAS) - set(MIAMI))
 OUTCOME =['log_weekly_wage']
-print("List of control groups:")
-print(MSAS)
-print(EDUCS)
-print(CONTROLS)
+
 
 # --- Build Rules --- #
 rule all:
@@ -58,14 +54,15 @@ rule paper:
     input:
         paper = config["src_paper"] + "paper.Rmd",
         runner = config["src_lib"] + "knit_rmd.R",
-        figures = expand(config["out_figures"] + "{iFigure}.pdf",
-                        iFigure = FIGS),
-        table = expand(config["out_tables"] + "{iTable}.tex",
-                        iTable = TABS)
+        figures = expand(config["out_figures"] + "trend_log_wage_{iEduc}_miami_vs_{iControl}.pdf",
+                        iEduc = EDUCS,
+                        iControl = CONTROLS),
+        table = expand(config["out_tables"] + "table_did_{iEduc}.tex",
+                        iEduc = EDUCS)
     output:
         pdf = config["out_paper"] + "paper.pdf"
     log:
-        config["log"] + "paper/paper.Rout"
+        config["log"] + "paper.Rout"
     shell:
         "Rscript {input.runner} {input.paper} {output.pdf} \
             > {log} 2>&1"

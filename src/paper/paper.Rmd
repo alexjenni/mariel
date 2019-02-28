@@ -27,9 +27,7 @@ These are many plots.
 knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_not_miami.pdf",
                             "../../out/figures/trend_log_wage_no_hs_miami_vs_card.pdf",
                             "../../out/figures/trend_log_wage_hs_more_miami_vs_not_miami.pdf",
-                            "../../out/figures/trend_log_wage_hs_more_miami_vs_card.pdf",
-                            "../../out/figures/cps_trend_no_hs_vs_placebo_not_miami.pdf",
-                            "../../out/figures/cps_trend_no_hs_vs_not_miami.pdf"))
+                            "../../out/figures/trend_log_wage_hs_more_miami_vs_card.pdf"))
 ```
 
 ## Regression Tables
