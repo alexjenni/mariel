@@ -8,3 +8,4 @@ logs/*
 *.Rout
 .Rhistory
 .Rproj.user
+src/*.log

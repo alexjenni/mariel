@@ -14,8 +14,6 @@ MSAS =  glob_wildcards(config["src_data_specs"] +
             "subset_msa_{iFile}.json").iFile
 EDUCS = glob_wildcards(config["src_data_specs"] +
             "subset_edu_{iFile}.json").iFile
-FIGS = glob_wildcards(config["out_figures"] +
-            "{iFile}.pdf").iFile
 
 MIAMI = ['miami']
 CONTROLS= list(set(MSAS) - set(MIAMI))
@@ -37,7 +35,7 @@ rule all:
         paper = "pp4rs_assignment.pdf"
     shell:
         "cp {input.paper} {output.paper}"
-        #"Move-Item -Path {input.paper} -Destination {input.paper}"
+        #"Move-Item -Path {input.paper} -Destination {output.paper}"
 
 
 #Paper    : builds tex file instead of Rmd file, DON'T DELETE, IT COULD BE USEFUL IN LIFE

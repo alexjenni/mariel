@@ -21,7 +21,7 @@ This is the introduction. It will be a wonderful replication.
 
 ## Summary Plots
 
-These are many plots.
+There are many plots.
 
 ```{r fig-sub, fig.align="center", echo = FALSE, fig.cap = 'Graphical depiction of first stage and reduced form for IV estimates of the economic return to schooling using quarter of birth', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.60\\linewidth', fig.asp = 1, fig.ncol = 1}
 knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_not_miami.pdf",
@@ -32,7 +32,7 @@ knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_not_
 
 ## Regression Tables
 
-These are 2 tables.
+There are 2 tables in our paper.
 
 \input{../../out/tables/table_did_no_hs.tex}
 \input{../../out/tables/table_did_hs_more.tex}
