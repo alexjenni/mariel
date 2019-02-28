@@ -1,13 +1,13 @@
 # knit_rmd
 #
 # this script takes an Rmd file command line argument
-# and complies it using knitr
+# and compiles it using knitr
 #
 # Compilation happens in the directory where the Rmd file is located since
 # this seems to be a bit of a philosophy, and then we move the file to the
 # desired output location
 #
-#
+# Author: @lachlandeer
 
 library(here)
 library(rmarkdown)
