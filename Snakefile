@@ -135,3 +135,20 @@ rule clean_cps:
         "Rscript {input.script} \
             --data {input.data} \
             --out {output.out} > {log} {LOGALL}"
+
+# --- R package resolution --- #
+
+## find_packages      : looks for R packages used across all scripts
+rule find_packages:
+    output:
+        "REQUIREMENTS.txt"
+    shell:
+        "bash find_r_packages.sh"
+
+## install_packages   : installs missing R packages
+rule install_packages:
+    input:
+        script = config["src_lib"] + "install_r_packages.R",
+        requirements = "REQUIREMENTS.txt"
+    shell:
+        "Rscript {input.script}"
