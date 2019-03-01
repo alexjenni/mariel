@@ -50,7 +50,7 @@ control <- read_csv(opt$data_control)
 if (grepl("not_miami",opt$data_control)){
   lab_control <- "All other US cities"
 } else if(grepl("card",opt$data_control)) {
-  lab_control <- "Atlanta, LA, Houston and Tampa"
+  lab_control <- "Card Placebo"
 } else {
   lab_control <- "Control group"
 }
@@ -65,13 +65,12 @@ cps_trend <- ggplot(cps_ready) +
   geom_point(aes(x = year, y = log_weekly_wage, colour = miami), size = 4) +
   geom_line(aes(x = year, y = log_weekly_wage, colour = miami, group = miami), size = 2) +
   geom_vline(aes(xintercept = 1980)) +
-  scale_x_continuous(name="year", breaks=seq(1975,1995,1)) +
+  scale_x_continuous(name="Year", breaks=seq(1976,1994,2)) +
   scale_color_manual(values=c("coral1","navyblue")) +
-  theme_classic() +
+  theme_classic(base_size = 22) +
   labs(y = "Mean Log Weekly Wage ($)",
-       x = "Year",
-       color = "MSA\n") +
-  annotate(geom="text",x=1979,y=y_pos,label="Mariel Boatlift")
+       color = "") +
+  annotate(geom="text",x=1978.6,y=y_pos,label="Mariel Boatlift")
 
 print("Save trend")
 ggsave(opt$out, cps_trend, width = 30, height = 20, units = "cm")
