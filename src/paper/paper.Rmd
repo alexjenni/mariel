@@ -31,9 +31,10 @@ Indeed, Card looks at the labor outcomes of all prime-aged men workers, while th
 [^1]: Borjas also has issues with the method used by Card to select the control group.
 
 We attempt to replicate the following figures and estimates from Borjas' paper:
- 1. Figure 2
- 2. The Card placebo and Miami series in Figure 3A
- 3. Columns "Card placebo" and "All cities" of Table 5A of the working paper.
+
+1. Figure 2
+2. The Card placebo and Miami series in Figure 3A
+3. Columns "Card placebo" and "All cities" of Table 5A of the working paper.
 
 
 In addition to those results, which are computed using the subsample of high-school dropouts, we also provide analogous results for high-school graduates. We do not replicate exactly the original coefficients because we use a different reference year for the Consumer Price Index (CPI) and are not able to reproduce exactly some of the sample restrictions of the original study. Nevertheless, the results are quantitatively very similar.
