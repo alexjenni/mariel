@@ -5,6 +5,7 @@ logs/*
 *.Rproj*
 *.pdf
 *.Rout
-.Rhistory
+*.Rhistory
 .Rproj.user
 src/paper/*.log
+.snakemake/*
