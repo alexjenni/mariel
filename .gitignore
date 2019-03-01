@@ -2,7 +2,7 @@ out/*
 src/data/cps*
 *.log
 *.Rproj*
-pp4rs_assignment.pdf
+*assignment*.pdf
 *.Rout
 *.Rhistory
 

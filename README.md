@@ -17,7 +17,7 @@ Our weapons of choice are:
 * `R` for statistical analysis
 
 ## How to Build this repo
-Download the repository onto your computer. Then, download the raw dataset (cps_77-93.csv) from https://www.dropbox.com/s/2cxjtqgxmdeclke/cps_77-93_men.csv?dl=0 and place it in src/data.
+Download the repository onto your computer. Then, download the raw dataset (cps_77-93.csv) from https://www.dropbox.com/s/2cxjtqgxmdeclke/cps_77-93_men.csv?dl=0 and place it in *src/data*.
 
 If you have Snakemake and R installed, navigate your terminal to this directory.
 
@@ -40,6 +40,8 @@ snakemake
 ```
 
 into your terminal and press `RETURN`
+
+This will build the project to completion. The output is our wonderful paper alex_miriam_pp4rs_assignment.pdf. 
 
 ## Install instructions
 

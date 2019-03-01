@@ -17,15 +17,6 @@ MIAMI = ['miami']
 CONTROLS= list(set(MSAS) - set(MIAMI))
 
 # --- Build Rules --- #
-## all : moves pdf to root, builds project if missing dependency
-rule all:
-    input:
-        paper = config["out_paper"] + "paper.pdf",
-    output:
-        paper = "pp4rs_assignment.pdf"
-    shell:
-        "cp {input.paper} {output.paper}"
-        #"Copy-Item -Path {input.paper} -Destination {output.paper}"
 
 ## paper : builds Rmd to pdf
 rule paper:
@@ -38,7 +29,7 @@ rule paper:
         table = expand(config["out_tables"] + "table_did_{iEduc}.tex",
                         iEduc = EDUCS)
     output:
-        pdf = config["out_paper"] + "paper.pdf"
+        pdf = "alex_miriam_pp4rs_assignment.pdf"
     log:
         config["log"] + "paper.Rout"
     shell:
