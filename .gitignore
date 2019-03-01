@@ -2,7 +2,6 @@ doc/*
 src/data/*
 out/*
 logs/*
-.snakemake/*
 *.Rproj*
 *.pdf
 *.Rout

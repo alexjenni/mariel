@@ -1,4 +1,0 @@
-Building DAG of jobs...
-MissingInputException in line 19 of C:\Users\mventu\coursework\pp4rs\mariel\Snakefile:
-Missing input files for rule rename_vars:
-src/data/cps_77-93_men.dta
