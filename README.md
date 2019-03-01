@@ -63,4 +63,4 @@ You can install snakemake as follows:
     ```
 
 ## References
-Borjas, George J. _The Wage Impact of the Marielitos: A Reappraisal._ No. w21588. National Bureau of Economic Research, 2015.
+Borjas, George J. The Wage Impact of the Marielitos: A Reappraisal. No. w21588. _National Bureau of Economic Research_, 2015.
