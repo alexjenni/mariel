@@ -1,10 +1,9 @@
 out/*
-src/data/*
-logs/*
+src/data/cps*
+*.log
 *.Rproj*
 pp4rs_assignment.pdf
 *.Rout
 *.Rhistory
-.Rproj.user
-src/paper/*.log
+
 .snakemake/*
