@@ -54,10 +54,11 @@ if (grepl("not_miami",opt$data_control)){
 } else {
   lab_control <- "Control group"
 }
+cps_ready <- union(miami, control)
+y_pos <- min(cps_ready$log_weekly_wage, na.rm=T) + 0.02
 
 # Plot graph miami vs. control group
 print("Plot trend")
-cps_ready <- union(miami, control)
 cps_ready$miami <- ordered(cps_ready$miami,
                            labels = c(lab_control, "Miami"))
 cps_trend <- ggplot(cps_ready) +
@@ -65,8 +66,12 @@ cps_trend <- ggplot(cps_ready) +
   geom_line(aes(x = year, y = log_weekly_wage, colour = miami, group = miami), size = 2) +
   geom_vline(aes(xintercept = 1980)) +
   scale_x_continuous(name="year", breaks=seq(1975,1995,1)) +
-  scale_color_manual(values=c("red","blue")) +
-  theme_classic()
+  scale_color_manual(values=c("coral1","navyblue")) +
+  theme_classic() +
+  labs(y = "Mean Log Weekly Wage ($)",
+       x = "Year",
+       color = "MSA\n") +
+  annotate(geom="text",x=1979,y=y_pos,label="Mariel Boatlift")
 
 print("Save trend")
 ggsave(opt$out, cps_trend, width = 30, height = 20, units = "cm")
