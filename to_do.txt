@@ -1,4 +1,2 @@
 To Do List
-- write a short README
-- finish writing up paper
 - check reproducibility with someone else
