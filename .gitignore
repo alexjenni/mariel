@@ -1,9 +1,8 @@
-doc/*
-src/data/*
 out/*
+src/data/*
 logs/*
 *.Rproj*
-*.pdf
+pp4rs_assignment.pdf
 *.Rout
 *.Rhistory
 .Rproj.user
