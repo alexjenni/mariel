@@ -27,7 +27,8 @@ rule paper:
                         iEduc = EDUCS,
                         iControl = CONTROLS),
         table = expand(config["out_tables"] + "table_did_{iEduc}.tex",
-                        iEduc = EDUCS)
+                        iEduc = EDUCS),
+        bib = config["src_paper"] + "references.bib"
     output:
         pdf = "alex_miriam_pp4rs_assignment.pdf"
     log:
