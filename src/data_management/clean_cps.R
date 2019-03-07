@@ -29,7 +29,7 @@ opt = parse_args(opt_parser);
 
 if (is.null(opt$data)){
   print_help(opt_parser)
-  stop("One argument must be supplied (input file).n", call. = FALSE)
+  stop("Could not find raw data (input file).n -see README", call. = FALSE)
 }
 
 # Load data
