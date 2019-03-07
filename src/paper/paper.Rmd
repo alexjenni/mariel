@@ -2,14 +2,6 @@
 title: "Replication of some results from Borjas (2015)"
 author: 'Alexandre Jenni and Miriam Venturini'
 date: "February 2, 2019"
-header-includes:
-   - \usepackage{bbm}
-   - \usepackage{subfig}
-   - \usepackage{dcolumn}
-   - \usepackage{amsthm}
-   - \usepackage{amsmath}
-   - \usepackage{float}
-   - \usepackage{graphicx}
 output: pdf_document
 bibliography: references.bib
 ---
@@ -48,11 +40,11 @@ Borjas refers to these four cities as "Card" control group.
 We first attempt to replicate Figure 2 and Figure 3a of Borjas (2015).
 These are shown in Figure 1 and Figure 2 of this report, which are automatically updated if they change.
 
-```{r fig-nohs, fig.align="center", fig.pos="H", echo = FALSE, fig.cap = 'Log weekly wage of high school dropouts, Miami vs. all other US cities', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.70\\linewidth', fig.asp = 1, fig.ncol = 1}
+```{r fig-nohs, fig.align="center", echo = FALSE, fig.cap = 'Log weekly wage of high school dropouts, Miami vs. all other US cities', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.70\\linewidth', fig.asp = 1, fig.ncol = 1}
 knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_not_miami.pdf"))
 ```
 
-```{r fig-nohsc, fig.align="center", fig.pos="H", echo = FALSE, fig.cap = 'Log weekly wage of high school dropouts, Miami vs. Card placebo', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.70\\linewidth', fig.asp = 1, fig.ncol = 1}
+```{r fig-nohsc, fig.align="center", echo = FALSE, fig.cap = 'Log weekly wage of high school dropouts, Miami vs. Card placebo', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.70\\linewidth', fig.asp = 1, fig.ncol = 1}
 knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_card.pdf"))
 ```
 
@@ -60,11 +52,11 @@ knitr::include_graphics( c("../../out/figures/trend_log_wage_no_hs_miami_vs_card
 Taking advantage of Snakemake, we can produce analogous graphs for the subsample
 of high-school graduates with a few additional lines of codes.
 
-```{r fig-fighs, fig.align="center", fig.pos="H", echo = FALSE, fig.cap = 'Log weekly wage of high school graduates, Miami vs. all other US cities', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.70\\linewidth', fig.asp = 1, fig.ncol = 1}
+```{r fig-fighs, fig.align="center", echo = FALSE, fig.cap = 'Log weekly wage of high school graduates, Miami vs. all other US cities', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.70\\linewidth', fig.asp = 1, fig.ncol = 1}
 knitr::include_graphics( c("../../out/figures/trend_log_wage_hs_more_miami_vs_not_miami.pdf"))
 ```
 
-```{r fig-fighsc, fig.align="center", fig.pos="H", echo = FALSE, fig.cap = 'Log weekly wage of high school graduates, Miami vs. Card placebo', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.70\\linewidth', fig.asp = 1, fig.ncol = 1}
+```{r fig-fighsc, fig.align="center", echo = FALSE, fig.cap = 'Log weekly wage of high school graduates, Miami vs. Card placebo', fig.subcap = c('Subcaption1', 'Subcaption2'), fig.show = "hold", out.width = '.70\\linewidth', fig.asp = 1, fig.ncol = 1}
 knitr::include_graphics( c("../../out/figures/trend_log_wage_hs_more_miami_vs_card.pdf"))
 ```
 

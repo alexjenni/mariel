@@ -59,7 +59,6 @@ print("Exporting tables")
 stargazer(data[[1]],
           data[[2]],
           initial.zero = TRUE,
-          align = TRUE,
           style = "qje",
           title = "DiD Impact of the Marielitos on the wage of high school dropouts",
           dep.var.labels = "Log wage of high school dropouts",
