@@ -15,11 +15,12 @@ Our weapons of choice are:
 
 * `Snakemake` to manage the build and dependencies
 * `R` for statistical analysis
+* `LaTeX` to compile the paper in a pdf document
 
 ## How to Build this repo
 Download the repository onto your computer. Then, download the raw dataset (cps_77-93.csv) from https://www.dropbox.com/s/2cxjtqgxmdeclke/cps_77-93_men.csv?dl=0 and place it in *src/data*.
 
-If you have Snakemake and R installed, navigate your terminal to this directory.
+If you have Snakemake, R and LaTeX installed, navigate your terminal to this directory.
 
 ### Installing Missing R packages
 
@@ -41,7 +42,7 @@ snakemake
 
 into your terminal and press `RETURN`
 
-This will build the project to completion. The output is our wonderful paper alex_miriam_pp4rs_assignment.pdf. 
+This will build the project to completion. The output is our wonderful paper alex_miriam_pp4rs_assignment.pdf.
 
 ## Install instructions
 
@@ -49,7 +50,6 @@ This will build the project to completion. The output is our wonderful paper ale
 
 * Install the latest version of `R` by following the instructions
   [here](https://pp4rs.github.io/installation-guide/r/).
-    * You can ignore the RStudio instructions for the purpose of this project.
 
 ### Installing `Snakemake`
 
@@ -65,6 +65,15 @@ You can install snakemake as follows:
 
     ```
     conda install datrie
+    ```
+
+
+### Installing `LaTeX`
+
+* For users who don't have `LaTeX` on their computer, we recommend to install the latest version of `TinyTeX` by by opening `RStudio` and entering the following in the console:
+    ```
+    install.packages("tinytex")
+    tinytex::install_tinytex()  # install TinyTeX
     ```
 
 ## References

@@ -11,6 +11,7 @@ packages <- as.list(read.delim("REQUIREMENTS.txt", sep= "\n",
                                col.names = c("to_check"),
                                stringsAsFactors = FALSE
                                ))
+packages  <- c(packages, "rmarkdown")
 
 # Gather List of Installed Packages
 installed_packages <- installed.packages()[, "Package"]
